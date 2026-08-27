@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, type Variants } from 'framer-motion'
+import { EmberField } from '../effects/EmberField'
 
 const WORDMARK = 'EMBER'
 
@@ -20,7 +21,7 @@ export function IntroAnimation() {
 
   useEffect(() => {
     if (!visible) return
-    const dismiss = setTimeout(() => setVisible(false), 2600)
+    const dismiss = setTimeout(() => setVisible(false), 3600)
     return () => clearTimeout(dismiss)
   }, [visible])
 
@@ -30,7 +31,7 @@ export function IntroAnimation() {
         <motion.div
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-ink"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.7, ease: 'easeInOut' } }}
+          exit={{ opacity: 0, transition: { duration: 0.8, ease: 'easeInOut' } }}
           onClick={() => setVisible(false)}
           role="presentation"
         >
@@ -47,7 +48,12 @@ export function IntroAnimation() {
             transition={{ duration: 2, delay: 0.3 }}
           />
 
-          <div className="relative flex items-center">
+          <EmberField count={20} />
+
+          <div
+            className="relative flex items-center"
+            style={{ textShadow: '0 0 30px rgba(255, 122, 61, 0.55)' }}
+          >
             {WORDMARK.split('').map((letter, i) => (
               <motion.span
                 key={i}

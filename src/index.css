@@ -4,19 +4,19 @@
   --font-display: 'Fraunces', Georgia, serif;
   --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
 
-  --color-ink: #050409;
-  --color-void: #0a0910;
-  --color-surface: #121019;
-  --color-surface-raised: #191622;
-  --color-hairline: #2a2632;
-  --color-hairline-strong: #3a3548;
-  --color-fog: #8a8496;
-  --color-bone: #ede9f2;
-  --color-bone-dim: #c7c2d1;
+  --color-ink: #0b0705;
+  --color-void: #120c09;
+  --color-surface: #1c130f;
+  --color-surface-raised: #241811;
+  --color-hairline: #33231a;
+  --color-hairline-strong: #4a3223;
+  --color-fog: #a89383;
+  --color-bone: #f5ece3;
+  --color-bone-dim: #ddc7b8;
 
-  --color-accent: #b4a0ff;
-  --color-accent-strong: #8f6dff;
-  --color-accent-hot: #ff6fae;
+  --color-accent: #ff8a4c;
+  --color-accent-strong: #ff5522;
+  --color-accent-hot: #ffcf6e;
 
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-fade-in: fade-in 0.5s ease both;
@@ -59,8 +59,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-image:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(143, 109, 255, 0.16), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(255, 111, 174, 0.08), transparent);
+    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255, 85, 34, 0.16), transparent),
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(255, 207, 110, 0.08), transparent);
   background-attachment: fixed;
   min-height: 100svh;
 }
@@ -72,7 +72,7 @@ body {
 }
 
 ::selection {
-  background: rgba(180, 160, 255, 0.28);
+  background: rgba(255, 138, 76, 0.3);
   color: var(--color-bone);
 }
 
@@ -98,8 +98,73 @@ button {
 }
 
 .text-gradient {
-  background-image: linear-gradient(100deg, var(--color-accent) 0%, var(--color-accent-hot) 100%);
+  background-image: linear-gradient(100deg, var(--color-accent-strong) 0%, var(--color-accent) 45%, var(--color-accent-hot) 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 0 22px rgba(255, 122, 61, 0.35));
+}
+
+/* Drifting embers: a field of glowing particles rising and fading, like
+   sparks off a fire. Used behind the login screen. Each particle carries
+   its own --drift/--duration/--delay via inline style. */
+.ember-field {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ember-particle {
+  position: absolute;
+  bottom: -5%;
+  border-radius: 999px;
+  opacity: 0;
+  filter: blur(1.5px);
+  animation-name: ember-rise;
+  animation-timing-function: cubic-bezier(0.3, 0, 0.6, 1);
+  animation-iteration-count: infinite;
+  animation-duration: var(--duration);
+  animation-delay: var(--delay);
+  will-change: transform, opacity;
+}
+
+@keyframes ember-rise {
+  0% {
+    transform: translate(0, 0) scale(0.6);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.8;
+  }
+  55% {
+    transform: translate(calc(var(--drift) * 0.6), -55vh) scale(1);
+  }
+  88% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(var(--drift), -108vh) scale(0.3);
+    opacity: 0;
+  }
+}
+
+@keyframes ember-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ember-particle {
+    animation: none;
+    opacity: 0.35;
+    bottom: 30%;
+  }
 }
