@@ -80,12 +80,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Field label="Username" error={errors.username?.message}>
-              <Input
-                autoFocus
-                autoComplete="username"
-                hasError={Boolean(errors.username)}
-                {...register('username')}
-              />
+              <Input autoComplete="username" hasError={Boolean(errors.username)} {...register('username')} />
             </Field>
             <Field label="Password" error={errors.password?.message}>
               <Input
