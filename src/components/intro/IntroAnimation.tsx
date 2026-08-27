@@ -50,10 +50,7 @@ export function IntroAnimation() {
 
           <EmberField count={20} />
 
-          <div
-            className="relative flex items-center"
-            style={{ textShadow: '0 0 30px rgba(255, 122, 61, 0.55)' }}
-          >
+          <div className="relative flex items-center">
             {WORDMARK.split('').map((letter, i) => (
               <motion.span
                 key={i}
@@ -61,7 +58,15 @@ export function IntroAnimation() {
                 variants={letterVariants}
                 initial="hidden"
                 animate="visible"
-                className="font-display text-5xl tracking-[0.12em] text-bone sm:text-7xl"
+                className="text-gradient font-display text-5xl tracking-[0.12em] sm:text-7xl"
+                style={{
+                  // Each letter is its own element (for the stagger), so the
+                  // shared .text-gradient background is stretched across the
+                  // whole word and shifted per letter — one continuous sweep
+                  // instead of every letter replaying the full gradient.
+                  backgroundSize: `${WORDMARK.length * 100}% 100%`,
+                  backgroundPositionX: `${(i / (WORDMARK.length - 1)) * 100}%`,
+                }}
               >
                 {letter}
               </motion.span>
