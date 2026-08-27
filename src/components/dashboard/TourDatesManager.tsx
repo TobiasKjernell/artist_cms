@@ -117,8 +117,7 @@ export function TourDatesManager({ slug }: { slug?: string } = {}) {
 
   return (
     <section>
-      <div className="mb-5 flex items-center justify-between">
-        <h2 className="text-xs font-medium uppercase tracking-[0.2em] text-fog">Tour dates</h2>
+      <div className="mb-5 flex items-center justify-end">
         <Button variant="ghost" onClick={() => setDialogState({ open: true })}>
           + Add tour date
         </Button>

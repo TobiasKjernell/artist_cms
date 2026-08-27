@@ -4,6 +4,7 @@ import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
 import { TourDatesManager } from '../components/dashboard/TourDatesManager'
 import { YoutubeManager } from '../components/dashboard/YoutubeManager'
+import { Tabs } from '../components/ui/Tabs'
 
 export default function AdminArtistDetailPage() {
   const { slug = '' } = useParams()
@@ -30,10 +31,12 @@ export default function AdminArtistDetailPage() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-14">
-        <TourDatesManager slug={artist.slug} />
-        <YoutubeManager slug={artist.slug} />
-      </div>
+      <Tabs
+        tabs={[
+          { id: 'tour-dates', label: 'Tour dates', content: <TourDatesManager slug={artist.slug} /> },
+          { id: 'videos', label: 'Videos', content: <YoutubeManager slug={artist.slug} /> },
+        ]}
+      />
     </div>
   )
 }

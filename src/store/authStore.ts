@@ -13,7 +13,7 @@ type AuthState = {
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set) => ({ 
       token: null,
       role: 'unknown',
       setToken: (token) => set({ token, role: 'unknown' }),

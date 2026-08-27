@@ -2,6 +2,7 @@ import { useAuthStore } from '../store/authStore'
 import { decodeJwtPayload } from '../lib/jwt'
 import { YoutubeManager } from '../components/dashboard/YoutubeManager'
 import { TourDatesManager } from '../components/dashboard/TourDatesManager'
+import { Tabs } from '../components/ui/Tabs'
 
 export default function DashboardPage() {
   const token = useAuthStore((s) => s.token)
@@ -19,10 +20,12 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="flex flex-col gap-14">
-        <TourDatesManager />
-        <YoutubeManager />
-      </div>
+      <Tabs
+        tabs={[
+          { id: 'tour-dates', label: 'Tour dates', content: <TourDatesManager /> },
+          { id: 'videos', label: 'Videos', content: <YoutubeManager /> },
+        ]}
+      />
     </div>
   )
 }
