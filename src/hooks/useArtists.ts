@@ -3,6 +3,7 @@ import {
   createArtist,
   getArtist,
   getArtistAdmin,
+  listArtistImages,
   listArtistsAdmin,
   listArtistTourDates,
   listArtistYoutube,
@@ -17,6 +18,9 @@ export const useArtistYoutube = (slug: string) =>
 
 export const useArtistTourDates = (slug: string) =>
   useQuery({ queryKey: ['artists', slug, 'tour-dates'], queryFn: () => listArtistTourDates(slug), enabled: Boolean(slug) })
+
+export const useArtistImages = (slug: string) =>
+  useQuery({ queryKey: ['artists', slug, 'images'], queryFn: () => listArtistImages(slug), enabled: Boolean(slug) })
 
 export const useArtistsAdmin = () => useQuery({ queryKey: ['artists-admin'], queryFn: listArtistsAdmin })
 

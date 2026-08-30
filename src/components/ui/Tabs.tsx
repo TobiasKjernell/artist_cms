@@ -22,7 +22,7 @@ export function Tabs({ tabs, defaultTabId }: { tabs: TabItem[]; defaultTabId?: s
             aria-selected={activeId === tab.id}
             onClick={() => setActiveId(tab.id)}
             className={clsx(
-              'relative pb-4 text-xs font-medium uppercase tracking-[0.2em] transition-colors',
+              'relative cursor-pointer pb-4 text-xs font-medium uppercase tracking-[0.2em] transition-colors',
               activeId === tab.id ? 'text-bone' : 'text-fog hover:text-bone-dim',
             )}
           >

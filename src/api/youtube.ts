@@ -14,5 +14,8 @@ export const createYoutubeVideo = (data: YoutubeVideoForm, slug?: string) =>
 export const updateYoutubeVideo = (id: number, data: Partial<YoutubeVideoForm>, slug?: string) =>
   apiFetch(`${basePath(slug)}/${id}`, youtubeVideoSchema, { method: 'PATCH', body: data, auth: true })
 
+export const updateYoutubeVideoPosition = (id: number, position: number, slug?: string) =>
+  apiFetch(`${basePath(slug)}/${id}`, youtubeVideoSchema, { method: 'PATCH', body: { position }, auth: true })
+
 export const deleteYoutubeVideo = (id: number, slug?: string) =>
   apiFetch(`${basePath(slug)}/${id}`, z.void(), { method: 'DELETE', auth: true })

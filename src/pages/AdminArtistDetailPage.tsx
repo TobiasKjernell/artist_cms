@@ -4,6 +4,7 @@ import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
 import { TourDatesManager } from '../components/dashboard/TourDatesManager'
 import { YoutubeManager } from '../components/dashboard/YoutubeManager'
+import { GalleryManager } from '../components/dashboard/GalleryManager'
 import { Tabs } from '../components/ui/Tabs'
 
 export default function AdminArtistDetailPage() {
@@ -27,7 +28,7 @@ export default function AdminArtistDetailPage() {
         <p className="mb-3 text-xs uppercase tracking-[0.3em] text-fog">Managing @{artist.slug}</p>
         <h1 className="font-display text-4xl text-bone">{artist.display_name}</h1>
         <p className="mt-2 max-w-lg text-sm text-fog">
-          You're editing this artist's videos and tour dates on their behalf.
+          You're editing this artist's videos, tour dates, and gallery on their behalf.
         </p>
       </div>
 
@@ -35,6 +36,7 @@ export default function AdminArtistDetailPage() {
         tabs={[
           { id: 'tour-dates', label: 'Tour dates', content: <TourDatesManager slug={artist.slug} /> },
           { id: 'videos', label: 'Videos', content: <YoutubeManager slug={artist.slug} /> },
+          { id: 'gallery', label: 'Gallery', content: <GalleryManager slug={artist.slug} /> },
         ]}
       />
     </div>

@@ -73,8 +73,8 @@ function TourDateFormDialog({
         <Field label="Tickets URL" error={errors.tickets_url?.message}>
           <Input placeholder="https://…" hasError={Boolean(errors.tickets_url)} {...register('tickets_url')} />
         </Field>
-        <label className="flex items-center gap-2 text-sm text-bone-dim">
-          <input type="checkbox" className="size-4 accent-accent" {...register('tickets_state')} />
+        <label className="flex cursor-pointer items-center gap-2 text-sm text-bone-dim">
+          <input type="checkbox" className="size-4 cursor-pointer accent-accent" {...register('tickets_state')} />
           Tickets available
         </label>
         {submitError && <p className="text-sm text-red-300/90">{submitError}</p>}

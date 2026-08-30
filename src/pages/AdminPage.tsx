@@ -129,7 +129,7 @@ export default function AdminPage() {
                   key={key}
                   onClick={() => setSortKey(key)}
                   className={
-                    'rounded-full px-3 py-1 uppercase tracking-wide transition-colors ' +
+                    'cursor-pointer rounded-full px-3 py-1 uppercase tracking-wide transition-colors ' +
                     (sortKey === key ? 'bg-surface-raised text-bone' : 'hover:text-bone-dim')
                   }
                 >

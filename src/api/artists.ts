@@ -7,6 +7,7 @@ import {
 } from '../schemas/artist'
 import { youtubeVideoListSchema } from '../schemas/youtube'
 import { tourDateListSchema } from '../schemas/tourdate'
+import { galleryImageListSchema } from '../schemas/gallery'
 
 export const getArtist = (slug: string) => apiFetch(`/artists/${encodeURIComponent(slug)}`, artistPublicSchema)
 
@@ -23,3 +24,6 @@ export const listArtistYoutube = (slug: string) =>
 
 export const listArtistTourDates = (slug: string) =>
   apiFetch(`/artists/${encodeURIComponent(slug)}/tour-dates`, tourDateListSchema)
+
+export const listArtistImages = (slug: string) =>
+  apiFetch(`/artists/${encodeURIComponent(slug)}/images`, galleryImageListSchema)

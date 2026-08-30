@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { useArtist, useArtistTourDates, useArtistYoutube } from '../hooks/useArtists'
+import { useArtist, useArtistImages, useArtistTourDates, useArtistYoutube } from '../hooks/useArtists'
 import { Spinner } from '../components/ui/Spinner'
 import { ErrorState } from '../components/ui/ErrorState'
 import { EmptyState } from '../components/ui/EmptyState'
 import { Card } from '../components/ui/Card'
+import { Lightbox } from '../components/ui/Lightbox'
 import { formatDate } from '../lib/format'
 import { toYoutubeEmbedUrl } from '../lib/youtube'
 
@@ -12,6 +14,8 @@ export default function ArtistProfilePage() {
   const artistQuery = useArtist(slug)
   const youtubeQuery = useArtistYoutube(slug)
   const tourDatesQuery = useArtistTourDates(slug)
+  const imagesQuery = useArtistImages(slug)
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null)
 
   if (artistQuery.isLoading) return <Spinner label="Loading artist…" />
   if (artistQuery.isError) return <ErrorState error={artistQuery.error} onRetry={() => artistQuery.refetch()} />
@@ -60,6 +64,29 @@ export default function ArtistProfilePage() {
         )}
       </section>
 
+      <section className="mb-16">
+        <h2 className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-fog">Gallery</h2>
+        {imagesQuery.isLoading && <Spinner label="Loading gallery…" />}
+        {imagesQuery.isError && <ErrorState error={imagesQuery.error} />}
+        {imagesQuery.data && imagesQuery.data.length === 0 && (
+          <EmptyState title="No photos yet" description="This artist hasn't added any photos." />
+        )}
+        {imagesQuery.data && imagesQuery.data.length > 0 && (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {imagesQuery.data.map((image) => (
+              <button
+                key={image.id}
+                type="button"
+                onClick={() => setLightboxSrc(image.url)}
+                className="aspect-square cursor-pointer overflow-hidden rounded-2xl border border-hairline transition-opacity hover:opacity-90"
+              >
+                <img src={image.url} alt="" loading="lazy" decoding="async" className="size-full object-cover" />
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
+
       <section>
         <h2 className="mb-5 text-xs font-medium uppercase tracking-[0.2em] text-fog">Tour dates</h2>
         {tourDatesQuery.isLoading && <Spinner label="Loading tour dates…" />}
@@ -94,6 +121,8 @@ export default function ArtistProfilePage() {
           </div>
         )}
       </section>
+
+      <Lightbox src={lightboxSrc} onClose={() => setLightboxSrc(null)} />
     </div>
   )
 }

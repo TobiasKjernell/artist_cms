@@ -2,6 +2,7 @@ import { useAuthStore } from '../store/authStore'
 import { decodeJwtPayload } from '../lib/jwt'
 import { YoutubeManager } from '../components/dashboard/YoutubeManager'
 import { TourDatesManager } from '../components/dashboard/TourDatesManager'
+import { GalleryManager } from '../components/dashboard/GalleryManager'
 import { Tabs } from '../components/ui/Tabs'
 
 export default function DashboardPage() {
@@ -16,7 +17,7 @@ export default function DashboardPage() {
         </p>
         <h1 className="font-display text-4xl text-bone">Your content</h1>
         <p className="mt-2 max-w-lg text-sm text-fog">
-          Manage the videos and tour dates shown on your public artist page.
+          Manage the videos, tour dates, and gallery shown on your public artist page.
         </p>
       </div>
 
@@ -24,6 +25,7 @@ export default function DashboardPage() {
         tabs={[
           { id: 'tour-dates', label: 'Tour dates', content: <TourDatesManager /> },
           { id: 'videos', label: 'Videos', content: <YoutubeManager /> },
+          { id: 'gallery', label: 'Gallery', content: <GalleryManager /> },
         ]}
       />
     </div>
