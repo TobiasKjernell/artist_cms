@@ -7,10 +7,10 @@ import {
   merchReservationListSchema,
   merchReservationSchema,
   merchVariantSchema,
+  type EditableReservationStatusValue,
   type MerchItemCreatePayload,
   type MerchItemUpdatePayload,
   type MerchSizeValue,
-  type ReservationStatusValue,
 } from '../schemas/merch'
 
 // When `slug` is given, these hit the admin-on-behalf-of-artist routes
@@ -55,9 +55,14 @@ export const deleteMerchVariant = (itemId: number, variantId: number, slug?: str
 export const listMerchReservations = (slug?: string) =>
   apiFetch(`${basePath(slug)}/reservations`, merchReservationListSchema, { auth: true })
 
-export const updateMerchReservationStatus = (id: number, status: ReservationStatusValue, slug?: string) =>
+export const updateMerchReservationStatus = (id: number, status: EditableReservationStatusValue, slug?: string) =>
   apiFetch(`${basePath(slug)}/reservations/${id}`, merchReservationSchema, {
     method: 'PATCH',
     body: { status },
     auth: true,
   })
+
+// Cancelling restores the reservation's stock server-side and deletes the
+// reservation — there's no "cancelled" record left to un-cancel.
+export const cancelMerchReservation = (id: number, slug?: string) =>
+  apiFetch(`${basePath(slug)}/reservations/${id}`, z.void(), { method: 'DELETE', auth: true })

@@ -6,8 +6,14 @@ export type MerchTypeValue = (typeof MERCH_TYPES)[number]
 export const MERCH_SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'] as const
 export type MerchSizeValue = (typeof MERCH_SIZES)[number]
 
-export const RESERVATION_STATUSES = ['pending', 'contacted', 'fulfilled', 'cancelled'] as const
+// Cancelling isn't a status transition — it deletes the reservation and
+// restores its stock (see cancelMerchReservation), so it can't be toggled
+// back and forth and double-credit stock. "cancelled" only appears here so
+// the dropdown can offer it as a trigger for that confirm-and-delete flow.
+export const EDITABLE_RESERVATION_STATUSES = ['pending', 'contacted', 'fulfilled'] as const
+export const RESERVATION_STATUSES = [...EDITABLE_RESERVATION_STATUSES, 'cancelled'] as const
 export type ReservationStatusValue = (typeof RESERVATION_STATUSES)[number]
+export type EditableReservationStatusValue = (typeof EDITABLE_RESERVATION_STATUSES)[number]
 
 export const merchVariantSchema = z.object({
   id: z.number(),

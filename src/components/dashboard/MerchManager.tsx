@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import clsx from 'clsx'
 import {
+  useCancelMerchReservation,
   useCreateMerchItemWithImage,
   useCreateMerchVariant,
   useDeleteMerchItem,
@@ -18,9 +19,11 @@ import {
   MERCH_SIZES,
   RESERVATION_STATUSES,
   merchItemFormSchema,
+  type EditableReservationStatusValue,
   type MerchItem,
   type MerchItemForm,
   type MerchItemUpdatePayload,
+  type MerchReservation,
   type MerchSizeValue,
   type MerchVariant,
   type ReservationStatusValue,
@@ -362,6 +365,39 @@ function ItemFormDialog({
   )
 }
 
+function CancelReservationDialog({
+  reservation,
+  onClose,
+  onConfirm,
+  confirming,
+  confirmError,
+}: {
+  reservation: MerchReservation | null
+  onClose: () => void
+  onConfirm: () => void
+  confirming: boolean
+  confirmError: string | null
+}) {
+  return (
+    <Dialog open={Boolean(reservation)} onClose={onClose} title="Cancel reservation?">
+      <div className="flex flex-col gap-4">
+        <p className="text-sm text-fog">
+          This restores {reservation?.quantity} to stock and permanently removes the reservation. It can't be undone.
+        </p>
+        {confirmError && <p className="text-sm text-red-300/90">{confirmError}</p>}
+        <div className="flex justify-end gap-2">
+          <Button variant="ghost" onClick={onClose}>
+            No, keep it
+          </Button>
+          <Button variant="danger" loading={confirming} onClick={onConfirm}>
+            Yes, cancel it
+          </Button>
+        </div>
+      </div>
+    </Dialog>
+  )
+}
+
 export function MerchManager({ slug }: { slug?: string } = {}) {
   const { data: items, isLoading, isError, error, refetch } = useMerchItems(slug)
   const {
@@ -375,9 +411,28 @@ export function MerchManager({ slug }: { slug?: string } = {}) {
   const createItem = useCreateMerchItemWithImage(slug)
   const updateItem = useUpdateMerchItemWithImage(slug)
   const updateReservation = useUpdateMerchReservationStatus(slug)
+  const cancelReservation = useCancelMerchReservation(slug)
 
   const [dialogState, setDialogState] = useState<{ open: boolean; editing?: MerchItem }>({ open: false })
   const [formError, setFormError] = useState<string | null>(null)
+  const [cancelTarget, setCancelTarget] = useState<MerchReservation | null>(null)
+  const [cancelError, setCancelError] = useState<string | null>(null)
+
+  const closeCancelDialog = () => {
+    setCancelTarget(null)
+    setCancelError(null)
+  }
+
+  const confirmCancel = async () => {
+    if (!cancelTarget) return
+    setCancelError(null)
+    try {
+      await cancelReservation.mutateAsync(cancelTarget.id)
+      closeCancelDialog()
+    } catch (err) {
+      setCancelError(errorMessage(err))
+    }
+  }
 
   const closeDialog = () => {
     setDialogState({ open: false })
@@ -471,9 +526,14 @@ export function MerchManager({ slug }: { slug?: string } = {}) {
                   </div>
                   <select
                     value={reservation.status}
-                    onChange={(event) =>
-                      updateReservation.mutate({ id: reservation.id, status: event.target.value as ReservationStatusValue })
-                    }
+                    onChange={(event) => {
+                      const next = event.target.value as ReservationStatusValue
+                      if (next === 'cancelled') {
+                        setCancelTarget(reservation)
+                      } else {
+                        updateReservation.mutate({ id: reservation.id, status: next as EditableReservationStatusValue })
+                      }
+                    }}
                     className={selectClass}
                   >
                     {RESERVATION_STATUSES.map((status) => (
@@ -496,6 +556,14 @@ export function MerchManager({ slug }: { slug?: string } = {}) {
         onSubmit={handleSubmit}
         submitting={createItem.isPending || updateItem.isPending}
         submitError={formError}
+      />
+
+      <CancelReservationDialog
+        reservation={cancelTarget}
+        onClose={closeCancelDialog}
+        onConfirm={confirmCancel}
+        confirming={cancelReservation.isPending}
+        confirmError={cancelError}
       />
     </section>
   )

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
+  cancelMerchReservation,
   createMerchItem,
   createMerchVariant,
   deleteMerchItem,
@@ -12,7 +13,7 @@ import {
   updateMerchVariant,
 } from '../api/merch'
 import { uploadFileToStorage } from '../api/images'
-import type { MerchItemCreatePayload, MerchItemUpdatePayload, MerchSizeValue, ReservationStatusValue } from '../schemas/merch'
+import type { EditableReservationStatusValue, MerchItemCreatePayload, MerchItemUpdatePayload, MerchSizeValue } from '../schemas/merch'
 
 const itemsKeyFor = (slug?: string) => ['merch-items', slug ?? 'me']
 const reservationsKeyFor = (slug?: string) => ['merch-reservations', slug ?? 'me']
@@ -105,11 +106,19 @@ export const useMerchReservations = (slug?: string) =>
 export const useUpdateMerchReservationStatus = (slug?: string) => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ id, status }: { id: number; status: ReservationStatusValue }) =>
+    mutationFn: ({ id, status }: { id: number; status: EditableReservationStatusValue }) =>
       updateMerchReservationStatus(id, status, slug),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: reservationsKeyFor(slug) }),
+  })
+}
+
+export const useCancelMerchReservation = (slug?: string) => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => cancelMerchReservation(id, slug),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: reservationsKeyFor(slug) })
-      // A cancelled reservation restores stock server-side, so the items list is stale too.
+      // Cancelling restores stock server-side, so the items list is stale too.
       queryClient.invalidateQueries({ queryKey: itemsKeyFor(slug) })
     },
   })
