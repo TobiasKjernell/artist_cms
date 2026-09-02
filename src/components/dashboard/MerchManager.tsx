@@ -332,7 +332,13 @@ function ItemFormDialog({
           />
         </Field>
         <Field label="Price (USD)" error={errors.price?.message}>
-          <Input type="number" step="0.01" min="0" hasError={Boolean(errors.price)} {...register('price')} />
+          <Input
+            type="number"
+            step="0.01"
+            min="0"
+            hasError={Boolean(errors.price)}
+            {...register('price', { valueAsNumber: true })}
+          />
         </Field>
         <Field label="Type">
           {initial ? (

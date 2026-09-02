@@ -38,7 +38,7 @@ export const merchItemListSchema = z.array(merchItemSchema)
 export const merchItemFormSchema = z.object({
   name: z.string().min(1, 'Required').max(200, 'Must be at most 200 characters'),
   description: z.string().max(2000, 'Must be at most 2000 characters'),
-  price: z.coerce.number().min(0, 'Must be 0 or more'),
+  price: z.number().min(0, 'Must be 0 or more'),
   type: z.enum(MERCH_TYPES),
 })
 export type MerchItemForm = z.infer<typeof merchItemFormSchema>
