@@ -16,6 +16,7 @@ import {
   useUpdateMerchVariant,
 } from '../../hooks/useMerch'
 import {
+  EDITABLE_RESERVATION_STATUSES,
   MERCH_SIZES,
   RESERVATION_STATUSES,
   merchItemFormSchema,
@@ -398,6 +399,61 @@ function CancelReservationDialog({
   )
 }
 
+function ReservationRow({
+  reservation,
+  info,
+  onUpdateStatus,
+  onRequestCancel,
+  updating,
+}: {
+  reservation: MerchReservation
+  info?: { itemName: string; size: MerchSizeValue | null }
+  onUpdateStatus: (status: EditableReservationStatusValue) => void
+  onRequestCancel: () => void
+  updating: boolean
+}) {
+  return (
+    <Card className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center">
+      <div>
+        <p className="text-sm text-bone">
+          {info ? `${info.itemName}${info.size ? ` · ${info.size}` : ''}` : 'Unknown item'} · Qty {reservation.quantity}
+        </p>
+        <p className="text-xs text-fog">
+          {reservation.contact_email ?? reservation.contact_instagram ?? 'No contact info'} · {formatDate(reservation.created_at)}
+        </p>
+      </div>
+      <select
+        value={reservation.status}
+        disabled={updating}
+        onChange={(event) => {
+          const next = event.target.value as ReservationStatusValue
+          if (next === 'cancelled') {
+            onRequestCancel()
+          } else {
+            onUpdateStatus(next as EditableReservationStatusValue)
+          }
+        }}
+        className={selectClass}
+      >
+        {RESERVATION_STATUSES.map((status) => (
+          <option key={status} value={status}>
+            {status[0].toUpperCase() + status.slice(1)}
+          </option>
+        ))}
+      </select>
+    </Card>
+  )
+}
+
+function matchesReservationSearch(reservation: MerchReservation, query: string): boolean {
+  const q = query.trim().toLowerCase()
+  if (!q) return true
+  return (
+    (reservation.contact_email?.toLowerCase().includes(q) ?? false) ||
+    (reservation.contact_instagram?.toLowerCase().includes(q) ?? false)
+  )
+}
+
 export function MerchManager({ slug }: { slug?: string } = {}) {
   const { data: items, isLoading, isError, error, refetch } = useMerchItems(slug)
   const {
@@ -417,6 +473,7 @@ export function MerchManager({ slug }: { slug?: string } = {}) {
   const [formError, setFormError] = useState<string | null>(null)
   const [cancelTarget, setCancelTarget] = useState<MerchReservation | null>(null)
   const [cancelError, setCancelError] = useState<string | null>(null)
+  const [reservationSearch, setReservationSearch] = useState('')
 
   const closeCancelDialog = () => {
     setCancelTarget(null)
@@ -476,6 +533,21 @@ export function MerchManager({ slug }: { slug?: string } = {}) {
     return map
   }, [items])
 
+  const filteredReservations = useMemo(
+    () => (reservations ?? []).filter((r) => matchesReservationSearch(r, reservationSearch)),
+    [reservations, reservationSearch],
+  )
+
+  const reservationsByStatus = useMemo(() => {
+    const map = new Map<EditableReservationStatusValue, MerchReservation[]>()
+    EDITABLE_RESERVATION_STATUSES.forEach((status) => map.set(status, []))
+    filteredReservations.forEach((reservation) => {
+      if (reservation.status === 'cancelled') return
+      map.get(reservation.status)?.push(reservation)
+    })
+    return map
+  }, [filteredReservations])
+
   return (
     <section className="flex flex-col gap-12">
       <div>
@@ -501,48 +573,51 @@ export function MerchManager({ slug }: { slug?: string } = {}) {
       </div>
 
       <div>
-        <h2 className="mb-5 font-display text-xl text-bone">Reservations</h2>
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-display text-xl text-bone">Reservations</h2>
+          {reservations && reservations.length > 0 && (
+            <Input
+              type="search"
+              placeholder="Search by email or Instagram…"
+              value={reservationSearch}
+              onChange={(event) => setReservationSearch(event.target.value)}
+              className="w-full max-w-xs"
+            />
+          )}
+        </div>
 
         {reservationsLoading && <Spinner label="Loading reservations…" />}
         {reservationsIsError && <ErrorState error={reservationsError} onRetry={() => refetchReservations()} />}
         {reservations && reservations.length === 0 && (
           <EmptyState title="No reservations yet" description="Requests to reserve merch will show up here." />
         )}
+        {reservations && reservations.length > 0 && filteredReservations.length === 0 && (
+          <EmptyState title="No matches" description={`No reservations match "${reservationSearch}".`} />
+        )}
 
-        {reservations && reservations.length > 0 && (
-          <div className="flex flex-col gap-3">
-            {reservations.map((reservation) => {
-              const info = variantLookup.get(reservation.merch_variant_id)
+        {filteredReservations.length > 0 && (
+          <div className="flex flex-col gap-8">
+            {EDITABLE_RESERVATION_STATUSES.map((status) => {
+              const group = reservationsByStatus.get(status) ?? []
+              if (group.length === 0) return null
               return (
-                <Card key={reservation.id} className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center">
-                  <div>
-                    <p className="text-sm text-bone">
-                      {info ? `${info.itemName}${info.size ? ` · ${info.size}` : ''}` : 'Unknown item'} · Qty {reservation.quantity}
-                    </p>
-                    <p className="text-xs text-fog">
-                      {reservation.contact_email ?? reservation.contact_instagram ?? 'No contact info'} ·{' '}
-                      {formatDate(reservation.created_at)}
-                    </p>
-                  </div>
-                  <select
-                    value={reservation.status}
-                    onChange={(event) => {
-                      const next = event.target.value as ReservationStatusValue
-                      if (next === 'cancelled') {
-                        setCancelTarget(reservation)
-                      } else {
-                        updateReservation.mutate({ id: reservation.id, status: next as EditableReservationStatusValue })
-                      }
-                    }}
-                    className={selectClass}
-                  >
-                    {RESERVATION_STATUSES.map((status) => (
-                      <option key={status} value={status}>
-                        {status[0].toUpperCase() + status.slice(1)}
-                      </option>
+                <div key={status}>
+                  <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-fog">
+                    {status[0].toUpperCase() + status.slice(1)} · {group.length}
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    {group.map((reservation) => (
+                      <ReservationRow
+                        key={reservation.id}
+                        reservation={reservation}
+                        info={variantLookup.get(reservation.merch_variant_id)}
+                        updating={updateReservation.isPending && updateReservation.variables?.id === reservation.id}
+                        onUpdateStatus={(nextStatus) => updateReservation.mutate({ id: reservation.id, status: nextStatus })}
+                        onRequestCancel={() => setCancelTarget(reservation)}
+                      />
                     ))}
-                  </select>
-                </Card>
+                  </div>
+                </div>
               )
             })}
           </div>
