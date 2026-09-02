@@ -5,6 +5,7 @@ import { ErrorState } from '../components/ui/ErrorState'
 import { TourDatesManager } from '../components/dashboard/TourDatesManager'
 import { YoutubeManager } from '../components/dashboard/YoutubeManager'
 import { GalleryManager } from '../components/dashboard/GalleryManager'
+import { MerchManager } from '../components/dashboard/MerchManager'
 import { Tabs } from '../components/ui/Tabs'
 
 export default function AdminArtistDetailPage() {
@@ -37,6 +38,7 @@ export default function AdminArtistDetailPage() {
           { id: 'tour-dates', label: 'Tour dates', content: <TourDatesManager slug={artist.slug} /> },
           { id: 'videos', label: 'Videos', content: <YoutubeManager slug={artist.slug} /> },
           { id: 'gallery', label: 'Gallery', content: <GalleryManager slug={artist.slug} /> },
+          { id: 'merch', label: 'Merch', content: <MerchManager slug={artist.slug} /> },
         ]}
       />
     </div>

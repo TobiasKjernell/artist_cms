@@ -3,6 +3,7 @@ import { decodeJwtPayload } from '../lib/jwt'
 import { YoutubeManager } from '../components/dashboard/YoutubeManager'
 import { TourDatesManager } from '../components/dashboard/TourDatesManager'
 import { GalleryManager } from '../components/dashboard/GalleryManager'
+import { MerchManager } from '../components/dashboard/MerchManager'
 import { Tabs } from '../components/ui/Tabs'
 
 export default function DashboardPage() {
@@ -26,6 +27,7 @@ export default function DashboardPage() {
           { id: 'tour-dates', label: 'Tour dates', content: <TourDatesManager /> },
           { id: 'videos', label: 'Videos', content: <YoutubeManager /> },
           { id: 'gallery', label: 'Gallery', content: <GalleryManager /> },
+          { id: 'merch', label: 'Merch', content: <MerchManager /> },
         ]}
       />
     </div>

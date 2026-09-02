@@ -4,6 +4,10 @@ export function formatDate(iso: string): string {
   return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
 }
 
+export function formatPrice(cents: number): string {
+  return (cents / 100).toLocaleString(undefined, { style: 'currency', currency: 'USD' })
+}
+
 export function formatDateTimeLocalInput(iso: string): string {
   const date = new Date(iso)
   if (Number.isNaN(date.getTime())) return ''
