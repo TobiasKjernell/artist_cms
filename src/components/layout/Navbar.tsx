@@ -33,6 +33,9 @@ export function Navbar() {
               Admin
             </NavLink>
           )}
+          <NavLink to="/help" className={linkClasses}>
+            Help
+          </NavLink>
           {token ? (
             <Button
               variant="ghost"

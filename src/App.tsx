@@ -10,6 +10,7 @@ import LoginPage from './pages/LoginPage'
 import DashboardPage from './pages/DashboardPage'
 import AdminPage from './pages/AdminPage'
 import AdminArtistDetailPage from './pages/AdminArtistDetailPage'
+import HelpPage from './pages/HelpPage'
 import NotFoundPage from './pages/NotFoundPage'
 
 function AppShell() {
@@ -23,6 +24,7 @@ function AppShell() {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<Navigate to="/" replace />} />
+          <Route path="/help" element={<HelpPage />} />
           <Route path="/artists/:slug" element={<ArtistProfilePage />} />
           <Route
             path="/dashboard"

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { login } from '../api/auth'
 import { useAuthStore } from '../store/authStore'
 import { useAuthRole } from '../hooks/useAuthRole'
@@ -98,6 +98,9 @@ export default function LoginPage() {
             </Button>
           </form>
         </Card>
+        <Link to="/help" className="mt-6 text-sm text-fog transition-colors hover:text-bone-dim">
+          How does this site work?
+        </Link>
       </div>
     </div>
   )
