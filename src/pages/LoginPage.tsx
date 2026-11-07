@@ -62,7 +62,8 @@ export default function LoginPage() {
         <div className="bloom" aria-hidden="true" />
         <EmberField count={36} />
         <div className="relative animate-fade-up">
-          <h1 className="max-w-none font-display text-[clamp(5rem,16vw,13rem)] font-medium leading-[0.85] tracking-[-0.04em] text-accent">
+          <h1 className="flex max-w-none items-center gap-[0.12em] font-display text-[clamp(5rem,16vw,13rem)] font-medium leading-[0.85] tracking-[-0.04em] text-accent">
+            <img src="/ember-mark.svg" alt="" width={120} height={120} className="-ml-[0.27em] -mr-[0.14em] size-[1.05em] shrink-0" />
             Ember
           </h1>
           <p className="mt-6 max-w-sm text-base text-bone-dim">The content manager for artists.</p>

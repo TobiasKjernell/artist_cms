@@ -7,7 +7,7 @@ import { Button } from '../ui/Button'
 
 const linkClasses = ({ isActive }: { isActive: boolean }) =>
   clsx(
-    'flex min-h-9 items-center rounded-ctl px-3 text-sm transition-colors',
+    'flex min-h-9 items-center rounded-ctl px-2.5 text-sm transition-colors lg:px-3',
     isActive ? 'bg-surface-raised text-bone' : 'text-fog hover:bg-surface hover:text-bone-dim',
   )
 
@@ -20,12 +20,13 @@ export function Sidebar() {
   const username = token ? (decodeJwtPayload(token)?.sub as string | undefined) : undefined
 
   return (
-    <aside className="flex flex-wrap items-center gap-x-6 gap-y-3 border-b border-hairline bg-sidebar px-4 py-3 lg:sticky lg:top-0 lg:h-svh lg:w-60 lg:shrink-0 lg:flex-col lg:items-stretch lg:gap-0 lg:border-b-0 lg:border-r lg:p-4">
-      <NavLink to="/" className="font-display text-xl tracking-tight text-accent lg:mb-8 lg:px-3 lg:pt-2">
+    <aside className="flex flex-wrap items-center gap-x-2 gap-y-3 border-b border-hairline bg-sidebar px-4 py-3 lg:sticky lg:top-0 lg:h-svh lg:w-60 lg:shrink-0 lg:flex-col lg:items-stretch lg:gap-0 lg:border-b-0 lg:border-r lg:p-4">
+      <NavLink to="/" className="flex items-center gap-2 font-display text-xl tracking-tight text-accent lg:mb-8 lg:px-3 lg:pt-2">
+        <img src="/ember-mark.svg" alt="" width={40} height={40} className="-ml-2.5 -mr-2 size-10 shrink-0 lg:-ml-3 lg:-mr-2.5 lg:size-12" />
         EMBER
       </NavLink>
 
-      <nav aria-label="Main" className="flex flex-1 items-center gap-1 lg:flex-col lg:items-stretch">
+      <nav aria-label="Main" className="flex flex-1 items-center gap-0.5 lg:flex-col lg:items-stretch lg:gap-1">
         {role === 'artist' && (
           <NavLink to="/dashboard" className={linkClasses}>
             My content

@@ -6,13 +6,17 @@ const WORDMARK = 'EMBER'
 
 const easeOut = [0.16, 1, 0.3, 1] as const
 
+// The mark fades in first; the wordmark starts writing once it has settled.
+const MARK_DURATION = 0.9
+const WRITE_START = MARK_DURATION + 0.4
+
 const letterVariants: Variants = {
   hidden: { opacity: 0, y: 24, filter: 'blur(6px)' },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
     filter: 'blur(0px)',
-    transition: { delay: 0.5 + i * 0.07, duration: 0.6, ease: easeOut },
+    transition: { delay: WRITE_START + i * 0.07, duration: 0.6, ease: easeOut },
   }),
 }
 
@@ -21,7 +25,7 @@ export function IntroAnimation() {
 
   useEffect(() => {
     if (!visible) return
-    const dismiss = setTimeout(() => setVisible(false), 3600)
+    const dismiss = setTimeout(() => setVisible(false), 4800)
     return () => clearTimeout(dismiss)
   }, [visible])
 
@@ -50,6 +54,17 @@ export function IntroAnimation() {
 
           <EmberField count={20} />
 
+          <motion.img
+            src="/ember-mark.svg"
+            alt=""
+            width={120}
+            height={120}
+            className="relative mb-4 size-28 sm:size-36"
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: MARK_DURATION, ease: easeOut }}
+          />
+
           <div className="relative flex items-center">
             {WORDMARK.split('').map((letter, i) => (
               <motion.span
@@ -77,14 +92,14 @@ export function IntroAnimation() {
             className="mt-6 h-px w-16 bg-linear-to-r from-transparent via-accent to-transparent"
             initial={{ scaleX: 0, opacity: 0 }}
             animate={{ scaleX: 1, opacity: 1 }}
-            transition={{ delay: 1.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ delay: WRITE_START + 0.8, duration: 0.8, ease: easeOut }}
           />
 
           <motion.p
             className="mt-6 text-sm text-fog"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.7, duration: 0.8 }}
+            transition={{ delay: WRITE_START + 1.2, duration: 0.8 }}
           >
             An artist platform
           </motion.p>

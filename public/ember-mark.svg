@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Ember">
+  <polygon points="62,68 30,70 42,46" fill="#b8361f"/>
+  <polygon points="62,68 42,46 66,38" fill="#e2512b"/>
+  <polygon points="62,68 66,38 90,52" fill="#ff8a3d"/>
+  <polygon points="62,68 90,52 94,78" fill="#ffb04a"/>
+  <polygon points="62,68 94,78 70,96" fill="#ffd27a"/>
+  <polygon points="62,68 70,96 42,92" fill="#ff9b4a"/>
+  <polygon points="62,68 42,92 30,70" fill="#7a2416"/>
+  <polygon points="70,26 80,18 78,30" fill="#ff8a3d"/>
+  <polygon points="50,24 55,14 60,23" fill="#e2512b" opacity="0.8"/>
+  <polygon points="86,10 90,5 92,11" fill="#ffb04a" opacity="0.55"/>
+</svg>
