@@ -37,11 +37,13 @@ import { EmptyState } from '../ui/EmptyState'
 import { Card } from '../ui/Card'
 import { Button } from '../ui/Button'
 import { Dialog } from '../ui/Dialog'
+import { Badge } from '../ui/Badge'
+import { Icon } from '../ui/Icon'
 import { Field, Input } from '../ui/Field'
 import { formatDate, formatPrice } from '../../lib/format'
 
 const selectClass =
-  'rounded-lg border border-hairline bg-surface px-3.5 py-2.5 text-sm text-bone outline-none transition-colors duration-150 focus:border-accent/60'
+  'min-h-9 rounded-ctl border border-edge bg-surface px-3 py-1.5 text-sm text-bone outline-none transition-colors duration-150 focus:border-accent'
 
 function validateFile(file: File): string | null {
   if (!ALLOWED_IMAGE_TYPES.includes(file.type as (typeof ALLOWED_IMAGE_TYPES)[number])) {
@@ -153,7 +155,7 @@ function ItemCard({ item, slug, onEdit }: { item: MerchItem; slug?: string; onEd
 
   return (
     <Card className="flex flex-col gap-4 p-4 sm:flex-row">
-      <div className="aspect-square w-full shrink-0 overflow-hidden rounded-xl border border-hairline bg-surface sm:size-32">
+      <div className="size-28 shrink-0 overflow-hidden rounded-panel border border-hairline bg-surface sm:size-32">
         {item.image_url ? (
           <img src={item.image_url} alt="" loading="lazy" decoding="async" className="size-full object-cover" />
         ) : (
@@ -165,10 +167,11 @@ function ItemCard({ item, slug, onEdit }: { item: MerchItem; slug?: string; onEd
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-sm text-bone">{item.name}</p>
-            <p className="text-xs text-fog">
-              {formatPrice(item.price_cents)} · {item.type === 'clothing' ? 'Clothing' : 'Misc'}
-              {!item.is_active && ' · Hidden'}
-            </p>
+            <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-fog">
+              <span className="tabular-nums text-bone-dim">{formatPrice(item.price_cents)}</span>
+              <Badge tone="neutral">{item.type === 'clothing' ? 'Clothing' : 'Misc'}</Badge>
+              {!item.is_active && <Badge tone="warn">Hidden</Badge>}
+            </div>
           </div>
           <div className="flex shrink-0 flex-wrap justify-end gap-2">
             <Button variant="ghost" onClick={onEdit}>
@@ -194,7 +197,7 @@ function ItemCard({ item, slug, onEdit }: { item: MerchItem; slug?: string; onEd
         {item.description && <p className="text-xs text-fog">{item.description}</p>}
 
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-medium uppercase tracking-[0.12em] text-fog">Stock</p>
+          <p className="text-sm font-medium text-bone-dim">Stock</p>
           {item.variants.map((variant) => (
             // Keyed on stock too: when stock changes from outside this row
             // (e.g. a cancelled reservation restores it), remount to pick up
@@ -286,11 +289,11 @@ function ItemFormDialog({
       <form onSubmit={handleSubmit((data) => onSubmit(data, file, removeImage))} className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
           {displayedImage ? (
-            <div className="size-20 shrink-0 overflow-hidden rounded-xl border border-hairline">
+            <div className="size-20 shrink-0 overflow-hidden rounded-panel border border-hairline">
               <img src={displayedImage} alt="" className="size-full object-cover" />
             </div>
           ) : (
-            <div className="flex size-20 shrink-0 items-center justify-center rounded-xl border border-dashed border-hairline text-center text-[11px] text-fog">
+            <div className="flex size-20 shrink-0 items-center justify-center rounded-panel border border-dashed border-hairline text-center text-[11px] text-fog">
               No photo
             </div>
           )}
@@ -320,7 +323,7 @@ function ItemFormDialog({
           onChange={handleFileChange}
           className="hidden"
         />
-        {fileError && <p className="text-sm text-red-300/90">{fileError}</p>}
+        {fileError && <p className="text-sm text-danger">{fileError}</p>}
 
         <Field label="Name" error={errors.name?.message}>
           <Input hasError={Boolean(errors.name)} {...register('name')} />
@@ -347,17 +350,17 @@ function ItemFormDialog({
         <Field label="Type">
           {initial ? (
             <p className="py-2 text-sm text-bone-dim">
-              {initial.type === 'clothing' ? 'Clothing — per-size stock' : 'Misc — single stock'}
+              {initial.type === 'clothing' ? 'Clothing: per-size stock' : 'Misc: single stock'}
             </p>
           ) : (
             <select className={selectClass} {...register('type')}>
-              <option value="clothing">Clothing — per-size stock</option>
-              <option value="misc">Misc — single stock</option>
+              <option value="clothing">Clothing: per-size stock</option>
+              <option value="misc">Misc: single stock</option>
             </select>
           )}
         </Field>
 
-        {submitError && <p className="text-sm text-red-300/90">{submitError}</p>}
+        {submitError && <p className="text-sm text-danger">{submitError}</p>}
         <Button type="submit" loading={submitting} className="mt-1 w-full">
           {initial ? 'Save changes' : 'Add item'}
         </Button>
@@ -383,9 +386,9 @@ function CancelReservationDialog({
     <Dialog open={Boolean(reservation)} onClose={onClose} title="Cancel reservation?">
       <div className="flex flex-col gap-4">
         <p className="text-sm text-fog">
-          This restores {reservation?.quantity} to stock and permanently removes the reservation. It can't be undone.
+          This restores {reservation?.quantity} to stock and permanently removes the reservation. It can’t be undone.
         </p>
-        {confirmError && <p className="text-sm text-red-300/90">{confirmError}</p>}
+        {confirmError && <p className="text-sm text-danger">{confirmError}</p>}
         <div className="flex justify-end gap-2">
           <Button variant="ghost" onClick={onClose}>
             No, keep it
@@ -416,10 +419,10 @@ function ReservationRow({
     <Card className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center">
       <div>
         <p className="text-sm text-bone">
-          {info ? `${info.itemName}${info.size ? ` · ${info.size}` : ''}` : 'Unknown item'} · Qty {reservation.quantity}
+          {info ? `${info.itemName}${info.size ? `, ${info.size}` : ''}` : 'Unknown item'}, qty {reservation.quantity}
         </p>
         <p className="text-xs text-fog">
-          {reservation.contact_email ?? reservation.contact_instagram ?? 'No contact info'} · {formatDate(reservation.created_at)}
+          {reservation.contact_email ?? reservation.contact_instagram ?? 'No contact info'}, {formatDate(reservation.created_at)}
         </p>
       </div>
       <select
@@ -552,8 +555,9 @@ export function MerchManager({ slug }: { slug?: string } = {}) {
     <section className="flex flex-col gap-12">
       <div>
         <div className="mb-5 flex items-center justify-end">
-          <Button variant="ghost" onClick={() => setDialogState({ open: true })}>
-            + Add item
+          <Button onClick={() => setDialogState({ open: true })}>
+            <Icon name="plus" />
+            Add item
           </Button>
         </div>
 
@@ -574,7 +578,7 @@ export function MerchManager({ slug }: { slug?: string } = {}) {
 
       <div>
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-display text-xl text-bone">Reservations</h2>
+          <h2 className="font-display text-2xl text-bone">Reservations</h2>
           {reservations && reservations.length > 0 && (
             <Input
               type="search"
@@ -602,8 +606,11 @@ export function MerchManager({ slug }: { slug?: string } = {}) {
               if (group.length === 0) return null
               return (
                 <div key={status}>
-                  <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-fog">
-                    {status[0].toUpperCase() + status.slice(1)} · {group.length}
+                  <p className="mb-3 flex items-center gap-2 text-sm font-medium text-bone-dim">
+                    {status[0].toUpperCase() + status.slice(1)}
+                    <Badge tone={status === 'pending' ? 'warn' : status === 'fulfilled' ? 'good' : 'neutral'}>
+                      {group.length}
+                    </Badge>
                   </p>
                   <div className="flex flex-col gap-3">
                     {group.map((reservation) => (

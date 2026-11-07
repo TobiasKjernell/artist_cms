@@ -10,10 +10,10 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 
 const variantClasses: Record<Variant, string> = {
   primary:
-    'bg-bone text-ink hover:bg-white disabled:hover:bg-bone shadow-[0_0_0_1px_rgba(237,233,242,0.1)]',
+    'bg-accent text-accent-ink hover:bg-accent-hot disabled:hover:bg-accent',
   ghost:
-    'bg-transparent text-bone-dim border border-hairline hover:border-hairline-strong hover:text-bone',
-  danger: 'bg-transparent text-red-300/80 border border-red-500/20 hover:border-red-500/50 hover:text-red-300',
+    'bg-surface-raised text-bone-dim border border-hairline-strong hover:border-fog hover:text-bone',
+  danger: 'bg-transparent text-danger border border-danger-line hover:border-danger',
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -22,7 +22,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       disabled={disabled || loading}
       className={clsx(
-        'inline-flex cursor-pointer items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium tracking-wide transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-40',
+        'inline-flex cursor-pointer items-center justify-center gap-2 min-h-9 rounded-ctl px-3.5 py-1.5 text-sm font-medium transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-40',
         variantClasses[variant],
         className,
       )}

@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { login } from '../api/auth'
 import { useAuthStore } from '../store/authStore'
 import { useAuthRole } from '../hooks/useAuthRole'
 import { Button } from '../components/ui/Button'
 import { Field, Input } from '../components/ui/Field'
-import { Card } from '../components/ui/Card'
 import { Spinner } from '../components/ui/Spinner'
 import { errorMessage } from '../lib/errors'
 import { EmberField } from '../components/effects/EmberField'
@@ -58,25 +57,22 @@ export default function LoginPage() {
   if (token) return <Spinner label="Signing you in…" />
 
   return (
-    <div className="relative flex w-full flex-1 flex-col items-center justify-center overflow-hidden px-6 py-20">
-      <div
-        className="pointer-events-none absolute bottom-[-10%] left-1/2 h-[55vh] w-[70vw] max-w-160 -translate-x-1/2 rounded-full bg-accent-strong/25 blur-[110px]"
-        style={{ animation: 'ember-pulse 6s ease-in-out infinite' }}
-        aria-hidden="true"
-      />
-      <EmberField count={36} />
-
-      <div className="relative mx-auto flex w-full max-w-sm flex-col items-center">
-        <div className="animate-fade-up mb-10 text-center">
-          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-fog">Welcome to</p>
-          <h1 className="font-display text-4xl text-bone">
-            <span className="text-gradient">Ember</span>
+    <div className="grid w-full flex-1 lg:grid-cols-[minmax(0,1fr)_30rem]">
+      <section className="relative flex min-h-[46svh] flex-col justify-end overflow-hidden p-8 lg:min-h-svh lg:p-14">
+        <div className="bloom" aria-hidden="true" />
+        <EmberField count={36} />
+        <div className="relative animate-fade-up">
+          <h1 className="max-w-none font-display text-[clamp(5rem,16vw,13rem)] font-medium leading-[0.85] tracking-[-0.04em] text-accent">
+            Ember
           </h1>
+          <p className="mt-6 max-w-sm text-base text-bone-dim">The content manager for artists.</p>
         </div>
+      </section>
 
-        <Card className="w-full animate-fade-up p-8">
-          <h2 className="mb-1 font-display text-2xl text-bone">Sign in</h2>
-          <p className="mb-6 text-sm text-fog">Access your Ember account.</p>
+      <section className="flex items-center border-t border-hairline bg-sidebar px-8 py-14 lg:border-l lg:border-t-0 lg:px-12">
+        <div className="mx-auto w-full max-w-sm animate-fade-up">
+          <h2 className="mb-1 font-display text-3xl text-bone">Sign in</h2>
+          <p className="mb-8 text-sm text-fog">Access your Ember account.</p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
             <Field label="Username" error={errors.username?.message}>
@@ -91,17 +87,14 @@ export default function LoginPage() {
               />
             </Field>
 
-            {serverError && <p className="text-sm text-red-300/90">{serverError}</p>}
+            {serverError && <p className="text-sm text-danger">{serverError}</p>}
 
-            <Button type="submit" loading={submitting} className="mt-2 w-full">
+            <Button type="submit" loading={submitting} className="mt-2 min-h-11 w-full">
               Sign in
             </Button>
           </form>
-        </Card>
-        <Link to="/help" className="mt-6 text-sm text-fog transition-colors hover:text-bone-dim">
-          How does this site work?
-        </Link>
-      </div>
+        </div>
+      </section>
     </div>
   )
 }

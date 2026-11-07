@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { createPortal } from 'react-dom'
+import { Icon } from './Icon'
 
 export function Dialog({
   open,
@@ -17,14 +18,14 @@ export function Dialog({
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-ink/70 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-ink/70 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
           <motion.div
-            className="w-full max-w-md cursor-auto rounded-2xl border border-hairline-strong bg-surface-raised p-6 shadow-2xl"
+            className="w-full max-w-md cursor-auto rounded-panel border border-hairline-strong bg-surface-raised p-6"
             initial={{ opacity: 0, y: 12, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.98 }}
@@ -32,13 +33,13 @@ export function Dialog({
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-5 flex items-center justify-between">
-              <h3 className="font-display text-xl text-bone">{title}</h3>
+              <h3 className="text-lg font-medium text-bone">{title}</h3>
               <button
                 onClick={onClose}
-                className="cursor-pointer rounded-full p-1 text-fog transition-colors hover:text-bone"
+                className="cursor-pointer rounded-ctl p-1.5 text-fog transition-colors hover:text-bone"
                 aria-label="Close"
               >
-                ✕
+                <Icon name="close" />
               </button>
             </div>
             {children}

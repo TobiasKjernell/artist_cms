@@ -9,7 +9,7 @@ export function Lightbox({ src, onClose }: { src: string | null; onClose: () => 
     <AnimatePresence>
       {src && (
         <motion.div
-          className="fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-ink/90 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex cursor-pointer items-center justify-center bg-ink/90 p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -22,7 +22,7 @@ export function Lightbox({ src, onClose }: { src: string | null; onClose: () => 
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.98 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="max-h-full max-w-full cursor-auto rounded-lg object-contain shadow-2xl"
+            className="max-h-full max-w-full cursor-auto rounded-lg object-contain"
             onClick={(event) => event.stopPropagation()}
           />
         </motion.div>

@@ -7,6 +7,7 @@ import { YoutubeManager } from '../components/dashboard/YoutubeManager'
 import { GalleryManager } from '../components/dashboard/GalleryManager'
 import { MerchManager } from '../components/dashboard/MerchManager'
 import { Tabs } from '../components/ui/Tabs'
+import { PageHeader } from '../components/ui/PageHeader'
 
 export default function AdminArtistDetailPage() {
   const { slug = '' } = useParams()
@@ -17,21 +18,20 @@ export default function AdminArtistDetailPage() {
   if (!artist) return null
 
   return (
-    <div className="mx-auto w-full max-w-4xl flex-1 px-6 py-16">
-      <Link
-        to="/admin"
-        className="mb-8 inline-block text-xs uppercase tracking-[0.2em] text-fog transition-colors hover:text-bone-dim"
-      >
-        ← All artists
-      </Link>
-
-      <div className="animate-fade-up mb-12">
-        <p className="mb-3 text-xs uppercase tracking-[0.3em] text-fog">Managing @{artist.slug}</p>
-        <h1 className="font-display text-4xl text-bone">{artist.display_name}</h1>
-        <p className="mt-2 max-w-lg text-sm text-fog">
-          You're editing this artist's videos, tour dates, and gallery on their behalf.
-        </p>
-      </div>
+    <div className="mx-auto w-full max-w-6xl flex-1 px-6 py-10 lg:px-10">
+      <PageHeader
+        title={artist.display_name}
+        description="You're editing this artist's videos, tour dates, gallery and merch on their behalf."
+        crumbs={
+          <>
+            <Link to="/admin" className="text-bone-dim transition-colors hover:text-bone">
+              All artists
+            </Link>
+            <span aria-hidden="true">/</span>
+            <span>@{artist.slug}</span>
+          </>
+        }
+      />
 
       <Tabs
         tabs={[

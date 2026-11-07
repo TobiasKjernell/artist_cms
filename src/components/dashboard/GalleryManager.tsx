@@ -7,6 +7,7 @@ import { errorMessage } from '../../lib/errors'
 import { EmptyState } from '../ui/EmptyState'
 import { Button } from '../ui/Button'
 import { Dialog } from '../ui/Dialog'
+import { Icon } from '../ui/Icon'
 
 function validateFile(file: File): string | null {
   if (!ALLOWED_IMAGE_TYPES.includes(file.type as (typeof ALLOWED_IMAGE_TYPES)[number])) {
@@ -66,17 +67,17 @@ function UploadDialog({
     <Dialog open={open} onClose={close} title="Add photo">
       <div className="flex flex-col gap-4">
         {previewUrl ? (
-          <div className="relative aspect-square w-full overflow-hidden rounded-xl border border-hairline">
+          <div className="relative aspect-square w-full overflow-hidden rounded-panel border border-hairline">
             <img src={previewUrl} alt="" className="size-full object-cover" />
           </div>
         ) : (
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-hairline text-center text-sm text-fog transition-colors hover:border-hairline-strong hover:text-bone-dim"
+            className="flex aspect-square w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-panel border border-dashed border-hairline text-center text-sm text-fog transition-colors hover:border-hairline-strong hover:text-bone-dim"
           >
             <span>Click to choose a photo</span>
-            <span className="px-6 text-xs">JPEG, PNG, WebP, or GIF — up to 2MB</span>
+            <span className="px-6 text-xs">JPEG, PNG, WebP or GIF, up to 2MB</span>
           </button>
         )}
 
@@ -94,7 +95,7 @@ function UploadDialog({
           </Button>
         )}
 
-        {(localError || uploadError) && <p className="text-sm text-red-300/90">{localError || uploadError}</p>}
+        {(localError || uploadError) && <p className="text-sm text-danger">{localError || uploadError}</p>}
 
         <Button disabled={!file} loading={uploading} onClick={() => file && onUpload(file)} className="w-full">
           Upload photo
@@ -164,7 +165,7 @@ export function GalleryManager({ slug }: { slug?: string } = {}) {
   return (
     <section>
       <div className="mb-5 flex items-center justify-between gap-3">
-        <p className="text-xs text-fog">{hasPendingChanges ? 'Unsaved position changes' : ''}</p>
+        <p className="text-sm text-warn">{hasPendingChanges ? 'Unsaved position changes' : ''}</p>
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -174,13 +175,14 @@ export function GalleryManager({ slug }: { slug?: string } = {}) {
           >
             Save order
           </Button>
-          <Button variant="ghost" onClick={() => setDialogOpen(true)}>
-            + Add photo
+          <Button onClick={() => setDialogOpen(true)}>
+            <Icon name="plus" />
+            Add photo
           </Button>
         </div>
       </div>
 
-      {reorderError && <p className="mb-4 text-sm text-red-300/90">{reorderError}</p>}
+      {reorderError && <p className="mb-4 text-sm text-danger">{reorderError}</p>}
 
       {isLoading && <Spinner label="Loading photos…" />}
       {isError && <ErrorState error={error} onRetry={() => refetch()} />}
@@ -192,38 +194,38 @@ export function GalleryManager({ slug }: { slug?: string } = {}) {
         <div className="grid grid-cols-2 gap-x-3 gap-y-4 sm:grid-cols-3 md:grid-cols-4">
           {order.map((image, index) => (
             <div key={image.id} className="flex flex-col gap-2">
-              <div className="flex items-center justify-between rounded-full border border-hairline bg-surface-raised px-2 py-1.5">
+              <div className="flex items-center justify-between rounded-ctl border border-hairline bg-surface-raised px-1.5 py-1">
                 <div className="flex gap-1">
                   <button
                     type="button"
                     disabled={index === 0 || reorderMutation.isPending}
                     onClick={() => moveImage(index, -1)}
-                    className="flex size-7 cursor-pointer items-center justify-center rounded-full text-xs text-bone-dim transition-colors hover:bg-hairline hover:text-bone disabled:cursor-not-allowed disabled:opacity-30"
+                    className="flex size-7 cursor-pointer items-center justify-center rounded-ctl text-bone-dim transition-colors hover:bg-hairline hover:text-bone disabled:cursor-not-allowed disabled:opacity-30"
                     aria-label="Move earlier"
                   >
-                    ←
+                    <Icon name="left" size={14} />
                   </button>
                   <button
                     type="button"
                     disabled={index === order.length - 1 || reorderMutation.isPending}
                     onClick={() => moveImage(index, 1)}
-                    className="flex size-7 cursor-pointer items-center justify-center rounded-full text-xs text-bone-dim transition-colors hover:bg-hairline hover:text-bone disabled:cursor-not-allowed disabled:opacity-30"
+                    className="flex size-7 cursor-pointer items-center justify-center rounded-ctl text-bone-dim transition-colors hover:bg-hairline hover:text-bone disabled:cursor-not-allowed disabled:opacity-30"
                     aria-label="Move later"
                   >
-                    →
+                    <Icon name="right" size={14} />
                   </button>
                 </div>
                 <button
                   type="button"
                   disabled={deleteMutation.isPending && deleteMutation.variables === image.id}
                   onClick={() => deleteMutation.mutate(image.id, { onSuccess: () => setLocalOrder(null) })}
-                  className="flex size-7 cursor-pointer items-center justify-center rounded-full text-red-300/80 transition-colors hover:bg-red-500/15 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex size-7 cursor-pointer items-center justify-center rounded-ctl text-danger/80 transition-colors hover:bg-danger-line/40 hover:text-danger disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Delete photo"
                 >
-                  ✕
+                  <Icon name="close" size={14} />
                 </button>
               </div>
-              <div className="aspect-square overflow-hidden rounded-xl border border-hairline bg-surface">
+              <div className="aspect-square overflow-hidden rounded-panel border border-hairline bg-surface">
                 <img src={image.url} alt="" loading="lazy" decoding="async" className="size-full object-cover" />
               </div>
             </div>

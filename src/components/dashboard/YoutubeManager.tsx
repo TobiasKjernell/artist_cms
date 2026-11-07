@@ -16,6 +16,7 @@ import { EmptyState } from '../ui/EmptyState'
 import { Card } from '../ui/Card'
 import { Button } from '../ui/Button'
 import { Dialog } from '../ui/Dialog'
+import { Icon } from '../ui/Icon'
 import { Field, Input } from '../ui/Field'
 
 function VideoFormDialog({
@@ -59,7 +60,7 @@ function VideoFormDialog({
         <Field label="Song name (optional)" error={errors.title?.message}>
           <Input placeholder="e.g. Midnight Drive" hasError={Boolean(errors.title)} {...register('title')} />
         </Field>
-        {submitError && <p className="text-sm text-red-300/90">{submitError}</p>}
+        {submitError && <p className="text-sm text-danger">{submitError}</p>}
         <Button type="submit" loading={submitting} className="mt-1 w-full">
           {initial ? 'Save changes' : 'Add video'}
         </Button>
@@ -134,7 +135,7 @@ export function YoutubeManager({ slug }: { slug?: string } = {}) {
   return (
     <section>
       <div className="mb-5 flex items-center justify-between gap-3">
-        <p className="text-xs text-fog">{hasPendingChanges ? 'Unsaved position changes' : ''}</p>
+        <p className="text-sm text-warn">{hasPendingChanges ? 'Unsaved position changes' : ''}</p>
         <div className="flex items-center gap-2">
           <Button
             variant="ghost"
@@ -144,13 +145,14 @@ export function YoutubeManager({ slug }: { slug?: string } = {}) {
           >
             Save order
           </Button>
-          <Button variant="ghost" onClick={() => setDialogState({ open: true })}>
-            + Add video
+          <Button onClick={() => setDialogState({ open: true })}>
+            <Icon name="plus" />
+            Add video
           </Button>
         </div>
       </div>
 
-      {reorderError && <p className="mb-4 text-sm text-red-300/90">{reorderError}</p>}
+      {reorderError && <p className="mb-4 text-sm text-danger">{reorderError}</p>}
 
       {isLoading && <Spinner label="Loading videos…" />}
       {isError && <ErrorState error={error} onRetry={() => refetch()} />}
@@ -168,21 +170,29 @@ export function YoutubeManager({ slug }: { slug?: string } = {}) {
                     type="button"
                     disabled={index === 0 || reorderMutation.isPending}
                     onClick={() => moveVideo(index, -1)}
-                    className="flex size-6 cursor-pointer items-center justify-center rounded-full border border-hairline text-xs text-fog transition-colors hover:border-hairline-strong hover:text-bone disabled:cursor-not-allowed disabled:opacity-30"
+                    className="flex size-6 cursor-pointer items-center justify-center rounded-ctl border border-hairline text-fog transition-colors hover:border-hairline-strong hover:text-bone disabled:cursor-not-allowed disabled:opacity-30"
                     aria-label="Move up"
                   >
-                    ↑
+                    <Icon name="up" size={14} />
                   </button>
                   <button
                     type="button"
                     disabled={index === order.length - 1 || reorderMutation.isPending}
                     onClick={() => moveVideo(index, 1)}
-                    className="flex size-6 cursor-pointer items-center justify-center rounded-full border border-hairline text-xs text-fog transition-colors hover:border-hairline-strong hover:text-bone disabled:cursor-not-allowed disabled:opacity-30"
+                    className="flex size-6 cursor-pointer items-center justify-center rounded-ctl border border-hairline text-fog transition-colors hover:border-hairline-strong hover:text-bone disabled:cursor-not-allowed disabled:opacity-30"
                     aria-label="Move down"
                   >
-                    ↓
+                    <Icon name="down" size={14} />
                   </button>
                 </div>
+                <img
+                  src={`https://i.ytimg.com/vi/${video.video}/mqdefault.jpg`}
+                  alt=""
+                  width={128}
+                  height={72}
+                  loading="lazy"
+                  className="hidden aspect-video w-32 shrink-0 rounded-ctl border border-hairline bg-surface object-cover sm:block"
+                />
                 <div className="min-w-0">
                   <p className="truncate text-sm text-bone">{video.title || video.video}</p>
                   {video.title && <p className="truncate text-xs text-fog">{video.video}</p>}

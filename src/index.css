@@ -1,3 +1,8 @@
+/* Hallmark · shape: app screen · genre: atmospheric · theme: brand (Ember, kept) · redesign: full
+ * paper: oklch(15% 0.012 50) · accent: oklch(76% 0.16 50) · display: Fraunces · body: Inter
+ * nav: left sidebar, collection tabs · signature: the collection table with its status badges · states: loading, empty, error, full
+ * axes: dark warm/serif page titles/ember orange · posture: tool · contrast: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R3 V4 · weakest: R, kept the Fraunces titles and the orange as the user's brand, rhythm stays plain by design */
 @import 'tailwindcss';
 
 @theme {
@@ -17,6 +22,16 @@
   --color-accent: #ff8a4c;
   --color-accent-strong: #ff5522;
   --color-accent-hot: #ffcf6e;
+  --color-accent-ink: #1f0e05;
+  --color-sidebar: #0e0907;
+  --color-edge: #7d6a5c;
+  --color-danger: #f2a08f;
+  --color-danger-line: #6b2f25;
+  --color-success: #8fd19e;
+  --color-warn: #ffcf6e;
+
+  --radius-ctl: 6px;
+  --radius-panel: 8px;
 
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
   --animate-fade-in: fade-in 0.5s ease both;
@@ -47,8 +62,12 @@
 
 html,
 body {
-  background: var(--color-void);
+  overflow-x: clip;
   color: var(--color-bone);
+}
+
+html {
+  background: var(--color-void);
 }
 
 body {
@@ -58,10 +77,6 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image:
-    radial-gradient(ellipse 80% 50% at 20% -10%, rgba(255, 85, 34, 0.16), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(255, 207, 110, 0.08), transparent);
-  background-attachment: fixed;
   min-height: 100svh;
 }
 
@@ -71,8 +86,21 @@ body {
   flex-direction: column;
 }
 
+/* One static bloom of ember light at the foot of the public pages. */
+.bloom {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 55% 35% at 15% 100%,
+    color-mix(in oklab, var(--color-accent-strong) 20%, transparent),
+    transparent
+  );
+}
+
 ::selection {
-  background: rgba(255, 138, 76, 0.3);
+  background: color-mix(in oklab, var(--color-accent) 30%, transparent);
   color: var(--color-bone);
 }
 
@@ -87,6 +115,9 @@ h3 {
   font-weight: 500;
   color: var(--color-bone);
   letter-spacing: -0.01em;
+  overflow-wrap: break-word;
+  min-width: 0;
+  text-wrap: balance;
 }
 
 a {
@@ -97,12 +128,17 @@ button {
   font-family: inherit;
 }
 
+button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 .text-gradient {
-  background-image: linear-gradient(100deg, var(--color-accent-strong) 0%, var(--color-accent) 45%, var(--color-accent-hot) 100%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  filter: drop-shadow(0 0 22px rgba(255, 122, 61, 0.35));
+  color: var(--color-accent);
 }
 
 /* Drifting embers: a field of glowing particles rising and fading, like

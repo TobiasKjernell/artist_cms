@@ -31,6 +31,8 @@ export function useAuthRole() {
 
   return {
     role,
-    isLoading: Boolean(token) && role === 'unknown' && query.isLoading,
+    // `query.data` without a stored role is the one render between the probe
+    // finishing and the effect above saving it: still loading, not "not an admin".
+    isLoading: Boolean(token) && role === 'unknown' && (query.isLoading || Boolean(query.data)),
   }
 }

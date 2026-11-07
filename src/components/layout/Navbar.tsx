@@ -6,7 +6,7 @@ import { Button } from '../ui/Button'
 
 const linkClasses = ({ isActive }: { isActive: boolean }) =>
   clsx(
-    'text-sm tracking-wide transition-colors',
+    'text-sm transition-colors',
     isActive ? 'text-bone' : 'text-fog hover:text-bone-dim',
   )
 
@@ -17,9 +17,9 @@ export function Navbar() {
   const { role } = useAuthRole()
 
   return (
-    <header className="sticky top-0 z-40 border-b border-hairline/80 bg-void/80 backdrop-blur-md">
-      <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-4">
-        <NavLink to="/" className="font-display text-lg tracking-tight text-bone">
+    <header className="sticky top-0 z-40 border-b border-hairline/80 bg-void/90">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6 lg:px-10">
+        <NavLink to="/" className="font-display text-lg tracking-tight text-accent">
           EMBER
         </NavLink>
         <nav className="flex items-center gap-6">
@@ -33,9 +33,11 @@ export function Navbar() {
               Admin
             </NavLink>
           )}
-          <NavLink to="/help" className={linkClasses}>
-            Help
-          </NavLink>
+          {token && (
+            <NavLink to="/help" className={linkClasses}>
+              Help
+            </NavLink>
+          )}
           {token ? (
             <Button
               variant="ghost"

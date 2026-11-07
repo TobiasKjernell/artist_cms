@@ -16,6 +16,8 @@ import { Card } from '../ui/Card'
 import { Button } from '../ui/Button'
 import { Dialog } from '../ui/Dialog'
 import { Field, Input } from '../ui/Field'
+import { Badge } from '../ui/Badge'
+import { Icon } from '../ui/Icon'
 import { formatDate, formatDateTimeLocalInput } from '../../lib/format'
 
 function TourDateFormDialog({
@@ -77,7 +79,7 @@ function TourDateFormDialog({
           <input type="checkbox" className="size-4 cursor-pointer accent-accent" {...register('tickets_state')} />
           Tickets available
         </label>
-        {submitError && <p className="text-sm text-red-300/90">{submitError}</p>}
+        {submitError && <p className="text-sm text-danger">{submitError}</p>}
         <Button type="submit" loading={submitting} className="mt-1 w-full">
           {initial ? 'Save changes' : 'Add tour date'}
         </Button>
@@ -117,9 +119,11 @@ export function TourDatesManager({ slug }: { slug?: string } = {}) {
 
   return (
     <section>
-      <div className="mb-5 flex items-center justify-end">
-        <Button variant="ghost" onClick={() => setDialogState({ open: true })}>
-          + Add tour date
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <p className="text-sm text-fog">{data ? `${data.length} ${data.length === 1 ? 'date' : 'dates'}` : ''}</p>
+        <Button onClick={() => setDialogState({ open: true })}>
+          <Icon name="plus" />
+          Add tour date
         </Button>
       </div>
 
@@ -130,32 +134,45 @@ export function TourDatesManager({ slug }: { slug?: string } = {}) {
       )}
 
       {data && data.length > 0 && (
-        <div className="flex flex-col gap-3">
-          {data.map((td) => (
-            <Card key={td.id} className="flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center">
-              <div>
-                <p className="text-sm text-bone">
-                  {td.venue} · {td.location}
-                </p>
-                <p className="text-xs text-fog">
-                  {formatDate(td.date)} · {td.tickets_state ? 'Tickets on sale' : 'Sold out'}
-                </p>
-              </div>
-              <div className="flex shrink-0 gap-2">
-                <Button variant="ghost" onClick={() => setDialogState({ open: true, editing: td })}>
-                  Edit
-                </Button>
-                <Button
-                  variant="danger"
-                  loading={deleteMutation.isPending && deleteMutation.variables === td.id}
-                  onClick={() => deleteMutation.mutate(td.id)}
-                >
-                  Delete
-                </Button>
-              </div>
-            </Card>
-          ))}
-        </div>
+        <Card className="overflow-x-auto">
+          <table className="w-full min-w-[40rem] text-left text-sm">
+            <thead>
+              <tr className="border-b border-hairline bg-surface-raised text-fog">
+                <th className="px-4 py-2.5 font-medium">Date</th>
+                <th className="px-4 py-2.5 font-medium">Venue</th>
+                <th className="px-4 py-2.5 font-medium">Location</th>
+                <th className="px-4 py-2.5 font-medium">Tickets</th>
+                <th className="px-4 py-2.5" />
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((td) => (
+                <tr key={td.id} className="border-b border-hairline/60 last:border-0 hover:bg-surface-raised">
+                  <td className="whitespace-nowrap px-4 py-3 tabular-nums text-bone-dim">{formatDate(td.date)}</td>
+                  <td className="px-4 py-3 text-bone">{td.venue}</td>
+                  <td className="px-4 py-3 text-bone-dim">{td.location}</td>
+                  <td className="px-4 py-3">
+                    <Badge tone={td.tickets_state ? 'good' : 'muted'}>{td.tickets_state ? 'On sale' : 'Sold out'}</Badge>
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex justify-end gap-2">
+                      <Button variant="ghost" onClick={() => setDialogState({ open: true, editing: td })}>
+                        Edit
+                      </Button>
+                      <Button
+                        variant="danger"
+                        loading={deleteMutation.isPending && deleteMutation.variables === td.id}
+                        onClick={() => deleteMutation.mutate(td.id)}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
       )}
 
       <TourDateFormDialog

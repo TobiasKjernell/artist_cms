@@ -81,7 +81,7 @@ export function IntroAnimation() {
           />
 
           <motion.p
-            className="mt-6 text-xs uppercase tracking-[0.3em] text-fog"
+            className="mt-6 text-sm text-fog"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.7, duration: 0.8 }}

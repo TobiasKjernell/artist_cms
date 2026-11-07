@@ -12,6 +12,8 @@ import { Button } from '../components/ui/Button'
 import { Dialog } from '../components/ui/Dialog'
 import { Field, Input } from '../components/ui/Field'
 import { Card } from '../components/ui/Card'
+import { PageHeader } from '../components/ui/PageHeader'
+import { Icon } from '../components/ui/Icon'
 
 type SortKey = 'display_name' | 'username' | 'slug'
 
@@ -89,14 +91,17 @@ export default function AdminPage() {
   }, [artists, search, sortKey])
 
   return (
-    <div className="mx-auto w-full max-w-5xl flex-1 px-6 py-16">
-      <div className="animate-fade-up mb-10 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-fog">Admin</p>
-          <h1 className="font-display text-4xl text-bone">All artists</h1>
-        </div>
-        <Button onClick={() => setDialogOpen(true)}>+ New artist</Button>
-      </div>
+    <div className="mx-auto w-full max-w-6xl flex-1 px-6 py-10 lg:px-10">
+      <PageHeader
+        title="All artists"
+        description="Every artist account on the platform. Open one to edit their page content."
+        actions={
+          <Button onClick={() => setDialogOpen(true)}>
+            <Icon name="plus" />
+            New artist
+          </Button>
+        }
+      />
 
       {isLoading && <Spinner label="Loading artists…" />}
       {isError && <ErrorState error={error} onRetry={() => refetch()} />}
@@ -120,16 +125,16 @@ export default function AdminPage() {
               placeholder="Search by name, username, or slug…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="max-w-xs"
+              className="w-full max-w-sm"
             />
-            <div className="flex items-center gap-2 text-xs text-fog">
-              Sort by
+            <div className="flex items-center gap-1 text-sm text-fog">
+              <span className="mr-1">Sort by</span>
               {(['display_name', 'username', 'slug'] as const).map((key) => (
                 <button
                   key={key}
                   onClick={() => setSortKey(key)}
                   className={
-                    'cursor-pointer rounded-full px-3 py-1 uppercase tracking-wide transition-colors ' +
+                    'cursor-pointer rounded-ctl px-3 py-1.5 capitalize transition-colors ' +
                     (sortKey === key ? 'bg-surface-raised text-bone' : 'hover:text-bone-dim')
                   }
                 >
@@ -145,8 +150,8 @@ export default function AdminPage() {
             <Card className="overflow-hidden">
               <table className="w-full text-left text-sm">
                 <thead>
-                  <tr className="border-b border-hairline text-xs uppercase tracking-wide text-fog">
-                    <th className="px-5 py-3 font-medium">Display name</th>
+                  <tr className="border-b border-hairline bg-surface-raised text-sm text-fog">
+                    <th className="px-5 py-2.5 font-medium">Display name</th>
                     <th className="px-5 py-3 font-medium">Username</th>
                     <th className="px-5 py-3 font-medium">Slug</th>
                     <th className="px-5 py-3 font-medium" />
@@ -162,12 +167,12 @@ export default function AdminPage() {
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') navigate(`/admin/artists/${artist.slug}`)
                       }}
-                      className="cursor-pointer border-b border-hairline/60 transition-colors last:border-0 hover:bg-surface-raised/60"
+                      className="cursor-pointer border-b border-hairline/60 transition-colors last:border-0 hover:bg-surface-raised"
                     >
                       <td className="px-5 py-3 text-bone">{artist.display_name}</td>
                       <td className="px-5 py-3 text-bone-dim">{artist.username}</td>
                       <td className="px-5 py-3 text-fog">@{artist.slug}</td>
-                      <td className="px-5 py-3 text-right text-xs uppercase tracking-wide text-accent">Manage →</td>
+                      <td className="px-5 py-3 text-right text-sm text-accent">Manage</td>
                     </tr>
                   ))}
                 </tbody>

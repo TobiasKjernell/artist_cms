@@ -10,9 +10,9 @@ type FieldProps = {
 export function Field({ label, error, children }: FieldProps) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-xs font-medium uppercase tracking-[0.12em] text-fog">{label}</span>
+      <span className="text-sm text-bone-dim">{label}</span>
       {children}
-      {error && <span className="text-xs text-red-300/90">{error}</span>}
+      {error && <span className="text-xs text-danger">{error}</span>}
     </label>
   )
 }
@@ -23,8 +23,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(({ className, hasE
   <input
     ref={ref}
     className={clsx(
-      'rounded-lg border bg-surface px-3.5 py-2.5 text-sm text-bone placeholder:text-fog/60 outline-none transition-colors duration-150 focus:border-accent/60',
-      hasError ? 'border-red-500/40' : 'border-hairline',
+      'min-h-9 rounded-ctl border bg-surface px-3 py-1.5 text-sm text-bone placeholder:text-fog/60 outline-none transition-colors duration-150 focus:border-accent',
+      hasError ? 'border-danger' : 'border-edge',
       className,
     )}
     {...props}

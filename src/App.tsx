@@ -1,8 +1,11 @@
 import { QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { queryClient } from './lib/queryClient'
+import { useAuthStore } from './store/authStore'
+import { Sidebar } from './components/layout/Sidebar'
 import { Navbar } from './components/layout/Navbar'
 import { ProtectedRoute } from './components/layout/ProtectedRoute'
+import { RequireAuth } from './components/layout/RequireAuth'
 import { AdminRoute } from './components/layout/AdminRoute'
 import { IntroAnimation } from './components/intro/IntroAnimation'
 import ArtistProfilePage from './pages/ArtistProfilePage'
@@ -16,15 +19,24 @@ import NotFoundPage from './pages/NotFoundPage'
 function AppShell() {
   const location = useLocation()
   const isLandingPage = location.pathname === '/'
+  const token = useAuthStore((s) => s.token)
+  const inApp = Boolean(token) && /^\/(dashboard|admin|help)(\/|$)/.test(location.pathname)
 
   return (
-    <>
-      {!isLandingPage && <Navbar />}
-      <main className="flex flex-1 flex-col">
+    <div className={inApp ? 'flex flex-1 flex-col lg:flex-row' : 'flex flex-1 flex-col'}>
+      {inApp ? <Sidebar /> : !isLandingPage && <Navbar />}
+      <main className="flex min-w-0 flex-1 flex-col">
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/login" element={<Navigate to="/" replace />} />
-          <Route path="/help" element={<HelpPage />} />
+          <Route
+            path="/help"
+            element={
+              <RequireAuth>
+                <HelpPage />
+              </RequireAuth>
+            }
+          />
           <Route path="/artists/:slug" element={<ArtistProfilePage />} />
           <Route
             path="/dashboard"
@@ -53,7 +65,7 @@ function AppShell() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-    </>
+    </div>
   )
 }
 
