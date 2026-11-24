@@ -11,6 +11,7 @@ const SECTIONS = [
   { id: 'gallery', label: 'Gallery' },
   { id: 'merch', label: 'Merch' },
   { id: 'reservations', label: 'Reservations' },
+  { id: 'press', label: 'Press' },
   { id: 'admin', label: 'For admins' },
   { id: 'faq', label: 'Troubleshooting' },
 ]
@@ -104,7 +105,7 @@ export default function HelpPage() {
             </li>
             <li>
               <span className="text-bone">Dashboard</span>: <code className={code}>/dashboard</code>. Only you can open it, after
-              signing in. It has four tabs: Tour dates, Videos, Gallery and Merch.
+              signing in. It has five tabs: Tour dates, Videos, Gallery, Merch and Press.
             </li>
           </ul>
         </Sub>
@@ -431,6 +432,70 @@ export default function HelpPage() {
         <Tip>Fulfilled reservations stay in the list as a record. Only cancelling removes one.</Tip>
       </Section>
 
+      <Section
+        id="press"
+        title="Press tab"
+        intro="A private page for record labels and reviewers. They need a password to open it, and every label gets its own."
+      >
+        <Sub title="How it works">
+          <ul className="flex list-disc flex-col gap-1.5 pl-5 marker:text-fog">
+            <li>
+              The press page lives at <code className={code}>/press</code> on your artist site. It isn’t linked from anywhere and search
+              engines are told to ignore it, so only people you send the address to will find it.
+            </li>
+            <li>
+              Anyone who opens it sees a password box first. A correct password opens the page; a wrong one shows “Wrong password”.
+            </li>
+            <li>
+              The password is asked for again every time someone leaves the page, reloads it or closes the tab.
+            </li>
+          </ul>
+        </Sub>
+
+        <Sub title="Give a label access">
+          <Steps
+            items={[
+              <>Open the <span className="text-bone">Press</span> tab and click <span className="text-bone">Add access</span>.</>,
+              <><span className="text-bone">Name / record label</span>: who the password is for, for example <code className={code}>Sony Music</code>. Only you see this.</>,
+              <><span className="text-bone">Password</span>: at least 6 characters. It is shown in plain text so you can copy it.</>,
+              <>Press <span className="text-bone">Add access</span>, then send the label the link and the password.</>,
+            ]}
+          />
+        </Sub>
+
+        <Example title="two labels, two passwords">
+          <p>
+            Name: <span className="text-bone">Sony Music</span>, Password: <span className="text-bone">nightdrive-sony</span>
+            <br />
+            Name: <span className="text-bone">Indie Records</span>, Password: <span className="text-bone">nightdrive-indie</span>
+          </p>
+          <p>
+            Each label gets one row in the list with a green <span className="text-bone">Active</span> badge. Both passwords open the same
+            press page.
+          </p>
+        </Example>
+
+        <Sub title="Block, unblock and delete">
+          <ul className="flex list-disc flex-col gap-1.5 pl-5 marker:text-fog">
+            <li>
+              <span className="text-bone">Block</span> locks that label out straight away and the badge turns to{' '}
+              <span className="text-bone">Blocked</span>. <span className="text-bone">Unblock</span> gives the access back. Use this if you
+              want to pause access without losing the password.
+            </li>
+            <li>
+              <span className="text-bone">Delete</span> removes the access for good, after a confirmation. The label can’t get in again
+              unless you add a new password.
+            </li>
+          </ul>
+        </Sub>
+
+        <Tip>
+          Every password has to be different. If it’s already used by another label you get “Password already in use”. Passwords can’t
+          be read back later, so if you lose one, delete the entry and add a new one. Someone who is already on the page when you block
+          them stays there until they reload it.
+        </Tip>
+      </Section>
+
       {isAdmin && (
       <Section
         id="admin"
@@ -470,7 +535,7 @@ export default function HelpPage() {
 
         <Sub title="Editing on an artist’s behalf">
           <p>
-            The artist page (“Managing @luna-vale”) has the same four tabs as the artist’s own dashboard. Everything you change is
+            The artist page (“Managing @luna-vale”) has the same five tabs as the artist’s own dashboard. Everything you change is
             saved to <span className="text-bone">that artist’s</span> account. Use “← All artists” to go back.
           </p>
         </Sub>
