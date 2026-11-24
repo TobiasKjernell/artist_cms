@@ -6,6 +6,7 @@ import { TourDatesManager } from '../components/dashboard/TourDatesManager'
 import { YoutubeManager } from '../components/dashboard/YoutubeManager'
 import { GalleryManager } from '../components/dashboard/GalleryManager'
 import { MerchManager } from '../components/dashboard/MerchManager'
+import { PressManager } from '../components/dashboard/PressManager'
 import { Tabs } from '../components/ui/Tabs'
 import { PageHeader } from '../components/ui/PageHeader'
 
@@ -39,6 +40,7 @@ export default function AdminArtistDetailPage() {
           { id: 'videos', label: 'Videos', content: <YoutubeManager slug={artist.slug} /> },
           { id: 'gallery', label: 'Gallery', content: <GalleryManager slug={artist.slug} /> },
           { id: 'merch', label: 'Merch', content: <MerchManager slug={artist.slug} /> },
+          { id: 'press', label: 'Press', content: <PressManager slug={artist.slug} /> },
         ]}
       />
     </div>

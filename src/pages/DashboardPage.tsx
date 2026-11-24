@@ -2,6 +2,7 @@ import { YoutubeManager } from '../components/dashboard/YoutubeManager'
 import { TourDatesManager } from '../components/dashboard/TourDatesManager'
 import { GalleryManager } from '../components/dashboard/GalleryManager'
 import { MerchManager } from '../components/dashboard/MerchManager'
+import { PressManager } from '../components/dashboard/PressManager'
 import { Tabs } from '../components/ui/Tabs'
 import { PageHeader } from '../components/ui/PageHeader'
 
@@ -19,6 +20,7 @@ export default function DashboardPage() {
           { id: 'videos', label: 'Videos', content: <YoutubeManager /> },
           { id: 'gallery', label: 'Gallery', content: <GalleryManager /> },
           { id: 'merch', label: 'Merch', content: <MerchManager /> },
+          { id: 'press', label: 'Press', content: <PressManager /> },
         ]}
       />
     </div>
